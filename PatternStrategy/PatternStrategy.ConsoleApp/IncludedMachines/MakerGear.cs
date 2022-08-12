@@ -1,6 +1,7 @@
 ﻿using System.Drawing;
 using PatternStrategy.ConsoleApp.Extensions;
 using PatternStrategy.Core;
+using PatternStrategy.Core.Extensions;
 
 namespace PatternStrategy.ConsoleApp.IncludedMachines;
 

@@ -1,6 +1,6 @@
 ﻿using System.Drawing;
 
-namespace PatternStrategy.ConsoleApp.Extensions
+namespace PatternStrategy.Core.Extensions
 {
     public static class SizeExtensions
     {
