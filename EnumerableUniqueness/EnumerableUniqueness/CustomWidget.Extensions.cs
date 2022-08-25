@@ -47,10 +47,10 @@ namespace EnumerableUniqueness
         // just prefer this for organization if I'm allowed to modify
         // the original source 
 
-        public class DefaultComparer : IEqualityComparer<CustomWidget>
+        public class CaseInsensitiveComparer : IEqualityComparer<CustomWidget>
         {
             // make people use the static instance for reasons
-            private DefaultComparer() { }
+            private CaseInsensitiveComparer() { }
 
             public bool Equals(CustomWidget x, CustomWidget y)
             {
@@ -68,6 +68,28 @@ namespace EnumerableUniqueness
                 hashCode.Add(obj.Amount);
                 hashCode.Add(obj.Description, StringComparer.OrdinalIgnoreCase);
                 return hashCode.ToHashCode();
+            }
+
+            public static IEqualityComparer<CustomWidget> Instance { get; } = new CaseInsensitiveComparer();
+        }
+
+        public class DefaultComparer : IEqualityComparer<CustomWidget>
+        {
+            // make people use the static instance for reasons
+            private DefaultComparer() { }
+
+            public bool Equals(CustomWidget x, CustomWidget y)
+            {
+                if (ReferenceEquals(x, y)) return true;
+                if (ReferenceEquals(x, null)) return false;
+                if (ReferenceEquals(y, null)) return false;
+                if (x.GetType() != y.GetType()) return false;
+                return x.WidgetType.Equals(y.WidgetType) && x.Amount == y.Amount && x.Description == y.Description;
+            }
+
+            public int GetHashCode(CustomWidget obj)
+            {
+                return HashCode.Combine(obj.WidgetType, obj.Amount, obj.Description);
             }
 
             public static IEqualityComparer<CustomWidget> Instance { get; } = new DefaultComparer();
