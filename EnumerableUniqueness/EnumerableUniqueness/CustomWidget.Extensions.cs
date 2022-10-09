@@ -8,26 +8,32 @@ namespace EnumerableUniqueness
 {
     public partial class CustomWidget : IEquatable<CustomWidget>
     {
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                var hashCode = WidgetType.GetHashCode();
+                hashCode = (hashCode * 397) ^ Amount.GetHashCode();
+                hashCode = (hashCode * 397) ^ Description.GetHashCode();
+                return hashCode;
+            }
+        }
+
         // implement all the following methods to satisfy IEquatable and other
         // magic behavior expected by the framework
         public bool Equals(CustomWidget? other)
         {
-            if(ReferenceEquals(null, other)) return false;
-            if(ReferenceEquals(this, other)) return true;
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
             return WidgetType.Equals(other.WidgetType) && Amount == other.Amount && Description == other.Description;
         }
 
         public override bool Equals(object? obj)
         {
-            if(ReferenceEquals(null, obj)) return false;
-            if(ReferenceEquals(this, obj)) return true;
-            if(obj.GetType() != this.GetType()) return false;
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
             return Equals((CustomWidget)obj);
-        }
-
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(WidgetType, Amount, Description);
         }
 
         public static bool operator ==(CustomWidget? left, CustomWidget? right)
@@ -61,14 +67,6 @@ namespace EnumerableUniqueness
                 return x.WidgetType.Equals(y.WidgetType) && x.Amount == y.Amount && string.Equals(x.Description, y.Description, StringComparison.OrdinalIgnoreCase);
             }
 
-            public int GetHashCode(CustomWidget obj)
-            {
-                var hashCode = new HashCode();
-                hashCode.Add(obj.WidgetType);
-                hashCode.Add(obj.Amount);
-                hashCode.Add(obj.Description, StringComparer.OrdinalIgnoreCase);
-                return hashCode.ToHashCode();
-            }
 
             public static IEqualityComparer<CustomWidget> Instance { get; } = new CaseInsensitiveComparer();
         }
@@ -87,10 +85,6 @@ namespace EnumerableUniqueness
                 return x.WidgetType.Equals(y.WidgetType) && x.Amount == y.Amount && x.Description == y.Description;
             }
 
-            public int GetHashCode(CustomWidget obj)
-            {
-                return HashCode.Combine(obj.WidgetType, obj.Amount, obj.Description);
-            }
 
             public static IEqualityComparer<CustomWidget> Instance { get; } = new DefaultComparer();
         }
